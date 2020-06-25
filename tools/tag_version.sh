@@ -16,4 +16,4 @@ set -x #echo on
 
 git tag -a v$CURRENT_VERSION -m "Borrows $CURRENT_VERSION"
 
-git push upstream v$CURRENT_VERSION
+git push origin v$CURRENT_VERSION
