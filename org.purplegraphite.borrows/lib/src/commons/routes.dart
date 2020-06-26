@@ -25,10 +25,10 @@ Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
     case RootRoute:
     default:
-      // return wrapPageRoute<Root>(
-      //   Root(
-      //     key: RootRouteKey,
-      //   ),
-      // );
+    // return wrapPageRoute<Root>(
+    //   Root(
+    //     key: RootRouteKey,
+    //   ),
+    // );
   }
 }

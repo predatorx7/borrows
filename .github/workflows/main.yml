@@ -47,7 +47,7 @@ jobs:
           cd $GITHUB_WORKSPACE/org.purplegraphite.borrows;
           flutter format --set-exit-if-changed .;
 
-      - name: analyze issues
+      - name: analyze issues in application
         run: |
           cd $GITHUB_WORKSPACE/org.purplegraphite.borrows;
           flutter analyze .;
@@ -70,7 +70,11 @@ jobs:
           flutter-version: 1.17.2 # optional
           # The Flutter build release channel
           channel: stable # optional, default is stable
-      - name: run tests
+      - name: run tests on application
         run: |
           cd $GITHUB_WORKSPACE/org.purplegraphite.borrows;
+          flutter test;
+      - name: run tests on guidance_bubbles package
+        run: |
+          cd $GITHUB_WORKSPACE/packages/guidance_bubbles;
           flutter test;
