@@ -1,8 +1,8 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-class GuidanceBubbleInternal {
+class InternalPreferences {
   /// This will cache an instance of this object.
-  static GuidanceBubbleInternal _cache;
+  static InternalPreferences _cache;
 
   /// The id of this package used before vars in shared_preferences's key
   static const String _id = 'org.purplegraphite.guidance_bubbles';
@@ -11,7 +11,7 @@ class GuidanceBubbleInternal {
   static const String _launchCountKey = 'launch_count';
 
   /// internal constructor
-  GuidanceBubbleInternal._();
+  InternalPreferences._();
 
   /// This will be internally used to check nth time the application has been launched.
   SharedPreferences _preferences;
@@ -26,10 +26,12 @@ class GuidanceBubbleInternal {
   /// Returns true if this is the first time this app has been launched.
   bool get isFirstTime => (launchCount == 1);
 
-  /// Returns a singleton Future instance of [GuidanceBubbleInternal] with initialized preferences.
-  static Future<GuidanceBubbleInternal> fromFactory() async {
-    _cache ??= GuidanceBubbleInternal._();
-    await _cache._ensureInitialized();
+  /// Returns a singleton Future instance of [InternalPreferences] with initialized preferences.
+  static Future<InternalPreferences> getInstance() async {
+    if (_cache == null) {
+      _cache = InternalPreferences._();
+      await _cache._ensureInitialized();
+    }
     return _cache;
   }
 
@@ -54,7 +56,7 @@ class GuidanceBubbleInternal {
     await _preferences.setInt(_countKey, _launchCount);
   }
 
-  /// Used in [GuidanceBubbleInternal] factory. Not required to call again.
+  /// Used in [InternalPreferences] factory. Not required to call again.
   Future<void> _ensureInitialized() async {
     if (_isInitialized) return;
     _preferences = await SharedPreferences.getInstance();

@@ -32,8 +32,8 @@ class _BubbleShowcaseDemoWidget extends StatelessWidget {
           color: Colors.white,
         );
     return BubbleShowcase(
-      bubbleShowcaseId: 'my_bubble_showcase',
-      bubbleShowcaseVersion: 1,
+      // bubbleShowcaseId: 'my_bubble_showcase',
+      // bubbleShowcaseVersion: 1,
       bubbleSlides: [
         _firstSlide(textStyle),
         _secondSlide(textStyle),

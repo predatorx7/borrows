@@ -2,16 +2,52 @@ library bubble_showcase;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:guidance_bubbles/src/_internal.dart';
 import 'slide.dart';
+
+enum ShowBubble {
+  onlyForFirstLaunch,
+  everyTime,
+}
+
+class CounterText {
+  int _currentSlide;
+
+  int get currentSlide => _currentSlide;
+
+  int _slideCounts;
+
+  int get slideCounts => _slideCounts;
+
+  /// TO show a counter text, it should have current slide & slides count.
+  CounterText(int currentSlide, int slideCounts)
+      : assert(currentSlide != null),
+        assert(slideCounts != null),
+        assert(currentSlide <= slideCounts,
+            'CurrentSlide cannot be more than slideCount'),
+        assert(slideCounts > 1, 'Slide counts cannot be less than 1'),
+        _currentSlide = currentSlide,
+        _slideCounts = slideCounts;
+
+  void setCurrentSlide(int i) {
+    _currentSlide = i;
+  }
+
+  void setSlideCount(int c) {
+    _slideCounts = c;
+  }
+
+  String get text => '$currentSlide/$slideCounts';
+}
+
+class _Used {
+  bool used = false;
+}
 
 /// The BubbleShowcase main widget.
 class BubbleShowcase extends StatefulWidget {
-  /// This showcase identifier. Must be unique across the app.
-  final String bubbleShowcaseId;
-
-  /// This showcase version.
-  final int bubbleShowcaseVersion;
+  /// When should this bubble display
+  final ShowBubble showBubble;
 
   /// Whether this showcase should reopen once closed.
   final bool doNotReopenOnClose;
@@ -22,8 +58,8 @@ class BubbleShowcase extends StatefulWidget {
   /// The child widget (displayed below the showcase).
   final Widget child;
 
-  /// The counter text (:i is the current slide, :n is the slides count). You can pass null to disable this.
-  final String counterText;
+  /// TO show a counter text, it should have current slide & slides count. Defaults to null as disabled.
+  final CounterText counterText;
 
   /// Whether to show a close button.
   final bool showCloseButton;
@@ -34,14 +70,15 @@ class BubbleShowcase extends StatefulWidget {
   // Whether tapping anywhere will trigger the next slide. Defaults to true.
   final bool nextSlideOnTap;
 
+  final _Used _used = _Used();
+
   /// Creates a new bubble showcase instance.
   BubbleShowcase({
-    @required this.bubbleShowcaseId,
-    @required this.bubbleShowcaseVersion,
     this.doNotReopenOnClose = false,
     @required this.bubbleSlides,
+    this.showBubble = ShowBubble.onlyForFirstLaunch,
     this.child,
-    this.counterText = ':i/:n',
+    this.counterText,
     this.showCloseButton = true,
     this.initialDelay = Duration.zero,
     this.nextSlideOnTap = true,
@@ -55,10 +92,20 @@ class BubbleShowcase extends StatefulWidget {
     if (!doNotReopenOnClose) {
       return true;
     }
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    bool result =
-        preferences.getBool('$bubbleShowcaseId.$bubbleShowcaseVersion');
-    return result == null || result;
+
+    if (_used.used) {
+      // has been shown as an instance
+      return false;
+    }
+
+    InternalPreferences internal = await InternalPreferences.getInstance();
+    if (showBubble == ShowBubble.onlyForFirstLaunch) {
+      // Show bubble only first time
+      return internal.isFirstTime;
+    }
+
+    // show everytime
+    return true;
   }
 }
 
@@ -121,11 +168,7 @@ class _BubbleShowcaseState extends State<BubbleShowcase>
     if (_isFinished) {
       _currentSlideEntry = null;
       if (widget.doNotReopenOnClose) {
-        SharedPreferences.getInstance().then((preferences) {
-          preferences.setBool(
-              '${widget.bubbleShowcaseId}.${widget.bubbleShowcaseVersion}',
-              false);
-        });
+        widget._used.used = true;
       }
     } else {
       _currentSlideEntry = _createCurrentSlideEntry();

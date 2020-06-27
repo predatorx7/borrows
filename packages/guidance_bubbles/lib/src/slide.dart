@@ -58,8 +58,6 @@ abstract class BubbleSlide {
       goToSlide(currentSlideIndex + 1);
     }
 
-    ;
-
     var childWidget = child;
 
     if (builder != null) {
@@ -75,17 +73,20 @@ abstract class BubbleSlide {
     Color writeColor =
         Utils.isColorDark(boxShadow.color) ? Colors.white : Colors.black;
     if (bubbleShowcase.counterText != null) {
+      bubbleShowcase.counterText
+        ..setCurrentSlide(currentSlideIndex + 1)
+        ..setSlideCount(slidesCount);
       children.add(
         Positioned(
           bottom: 5,
           left: 0,
           right: 0,
           child: Text(
-            bubbleShowcase.counterText
-                .replaceAll(':i', (currentSlideIndex + 1).toString())
-                .replaceAll(':n', slidesCount.toString()),
-            style:
-                Theme.of(context).textTheme.body1.copyWith(color: writeColor),
+            bubbleShowcase.counterText.text,
+            style: Theme.of(context)
+                .textTheme
+                .bodyText2
+                .copyWith(color: writeColor),
             textAlign: TextAlign.center,
           ),
         ),
