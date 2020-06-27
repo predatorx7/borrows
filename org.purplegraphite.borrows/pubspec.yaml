@@ -31,7 +31,10 @@ dependencies:
   hive_flutter: ^0.3.0+2
   finance: ^0.1.0
   icofont_flutter: ^1.3.0
-  bubble_showcase: ^0.2.0+3
+  guidance_bubbles: 
+    path: ../packages/guidance_bubbles
+  contacts_service: ^0.4.6
+  permission_handler: ^5.0.1+1
   
 dev_dependencies:
   flutter_test:
