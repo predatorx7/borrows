@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:borrows/src/models/hive/financial_history.dart';
 import 'package:hive/hive.dart';
 

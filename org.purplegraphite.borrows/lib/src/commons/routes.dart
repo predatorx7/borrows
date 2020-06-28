@@ -1,6 +1,6 @@
+import 'package:borrows/src/ui/screens/homepage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 // Constant String screen's path address
 import 'routing_const.dart';
@@ -23,12 +23,12 @@ PageRoute<T> wrapPageRoute<T>(Widget screen,
 /// Generates Routes which will be used in the application
 Route<dynamic> generateRoute(RouteSettings settings) {
   switch (settings.name) {
-    case RootRoute:
+    case HomePageRoute:
     default:
-    // return wrapPageRoute<Root>(
-    //   Root(
-    //     key: RootRouteKey,
-    //   ),
-    // );
+      return wrapPageRoute<HomePage>(
+        HomePage(
+          key: RootRouteKey,
+        ),
+      );
   }
 }

@@ -51,7 +51,9 @@ class _ContactListPageState extends State<ContactListPage> {
 
   _openContactForm() async {
     try {
-      var contact = await ContactsService.openContactForm(
+      // TODO: Uncomment this when needed,
+      // var contact =
+      await ContactsService.openContactForm(
           iOSLocalizedLabels: iOSLocalizedLabels);
       refreshContacts();
     } on FormOperationException catch (e) {
