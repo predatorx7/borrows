@@ -130,6 +130,33 @@ abstract class BubbleSlide {
       BubbleShowcase bubbleShowcase, int currentSlideIndex);
 }
 
+/// A bubble slide child, holding a widget.
+abstract class BubbleSlideChild {
+  /// The held widget.
+  final Widget widget;
+
+  /// Creates a new bubble slide child instance.
+  const BubbleSlideChild({
+    this.widget,
+  });
+
+  /// Builds the bubble slide child widget.
+  Widget build(BuildContext context, Position targetPosition, Size parentSize) {
+    Position position = getPosition(context, targetPosition, parentSize);
+    return Positioned(
+      top: position.top,
+      right: position.right,
+      bottom: position.bottom,
+      left: position.left,
+      child: widget,
+    );
+  }
+
+  /// Returns child position according to the highlight position and parent size.
+  Position getPosition(
+      BuildContext context, Position highlightPosition, Size parentSize);
+}
+
 /// A bubble slide with a position that depends on another widget.
 class RelativeBubbleSlide extends BubbleSlide {
   /// The widget key.
@@ -204,33 +231,6 @@ class AbsoluteBubbleSlide extends BubbleSlide {
   Position getHighlightPosition(BuildContext context,
           BubbleShowcase bubbleShowcase, int currentSlideIndex) =>
       positionCalculator(MediaQuery.of(context).size);
-}
-
-/// A bubble slide child, holding a widget.
-abstract class BubbleSlideChild {
-  /// The held widget.
-  final Widget widget;
-
-  /// Creates a new bubble slide child instance.
-  const BubbleSlideChild({
-    this.widget,
-  });
-
-  /// Builds the bubble slide child widget.
-  Widget build(BuildContext context, Position targetPosition, Size parentSize) {
-    Position position = getPosition(context, targetPosition, parentSize);
-    return Positioned(
-      top: position.top,
-      right: position.right,
-      bottom: position.bottom,
-      left: position.left,
-      child: widget,
-    );
-  }
-
-  /// Returns child position according to the highlight position and parent size.
-  Position getPosition(
-      BuildContext context, Position highlightPosition, Size parentSize);
 }
 
 /// A bubble slide with a position that depends on the highlight zone.

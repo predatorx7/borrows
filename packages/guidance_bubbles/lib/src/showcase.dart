@@ -89,12 +89,8 @@ class BubbleShowcase extends StatefulWidget {
 
   /// Whether this showcase should be opened.
   Future<bool> get shouldOpenShowcase async {
-    if (!doNotReopenOnClose) {
-      return true;
-    }
-
-    if (_used.used) {
-      // has been shown as an instance
+    if (_used.used && doNotReopenOnClose) {
+      // has been shown
       return false;
     }
 
@@ -103,7 +99,8 @@ class BubbleShowcase extends StatefulWidget {
       // Show bubble only first time
       return internal.isFirstTime;
     }
-
+    print(
+        'Launch count: ${internal.launchCount} First time: ${internal.isFirstTime}');
     // show everytime
     return true;
   }
