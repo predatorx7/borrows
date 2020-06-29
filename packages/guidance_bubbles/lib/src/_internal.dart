@@ -1,5 +1,45 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
+class UniqueBubble {
+  final String uid;
+  UniqueBubble(this.uid);
+}
+
+class UniqueBubbleBox {
+  List<UniqueBubble> _uniqueBubbleUIDs = <UniqueBubble>[];
+  List<UniqueBubble> get uniqueBubbleUIDs => _uniqueBubbleUIDs;
+  String _uidHasFocus;
+  bool hasFocus(String uid) {
+    if (_uidHasFocus == null) {
+      return false;
+    }
+    return _uidHasFocus == uid;
+  }
+
+  String get whoHasFocus => _uidHasFocus;
+
+  void setFocus(String uid) {
+    for (var item in _uniqueBubbleUIDs) {
+      if (item.uid == uid) {
+        _uidHasFocus = uid;
+        return;
+      }
+      throw Exception('Cannot set focus to $uid. $uid is not registered.');
+    }
+  }
+
+  void add(String uid) {
+    for (var item in _uniqueBubbleUIDs) {
+      if (item.uid == uid) {
+        print(
+            '[guidance_bubbles] Widget with same bubble UID already exists. If you are using a unique UID then make sure the widget\'s instance  is not recreated.');
+        return;
+      }
+    }
+    _uniqueBubbleUIDs.add(UniqueBubble(uid));
+  }
+}
+
 class InternalPreferences {
   /// This will cache an instance of this object.
   static InternalPreferences _cache;
@@ -9,6 +49,9 @@ class InternalPreferences {
 
   /// The key id which will be used to retrieve the number of application was launched.
   static const String _launchCountKey = 'launch_count';
+
+  /// Stores all UID
+  final UniqueBubbleBox uniqueBubbleBox = UniqueBubbleBox();
 
   /// internal constructor
   InternalPreferences._();

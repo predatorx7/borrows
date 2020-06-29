@@ -103,7 +103,7 @@ class TextBuilder extends StatelessWidget {
             (textBrightness == BrightnessMode.auto) ? Colors.black : textColor;
         textStyle = textStyle.copyWith(
           fontSize: 11,
-          color: _color,
+          color: color ?? _color,
           fontWeight: FontWeight.w600,
         );
         break;
@@ -118,7 +118,7 @@ class TextBuilder extends StatelessWidget {
         }
         textStyle = textStyle.copyWith(
           fontSize: 16,
-          color: _color,
+          color: color ?? _color,
           fontWeight: FontWeight.w900,
         );
         break;
@@ -127,7 +127,7 @@ class TextBuilder extends StatelessWidget {
             (textBrightness == BrightnessMode.auto) ? Colors.black : textColor;
         textStyle = _textStyle.copyWith(
           fontSize: 14,
-          color: _color,
+          color: color ?? _color,
           fontWeight: FontWeight.normal,
         );
         break;

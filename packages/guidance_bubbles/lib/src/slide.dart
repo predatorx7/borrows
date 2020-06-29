@@ -160,10 +160,10 @@ abstract class BubbleSlideChild {
 /// A bubble slide with a position that depends on another widget.
 class RelativeBubbleSlide extends BubbleSlide {
   /// The widget key.
-  final GlobalKey widgetKey;
+  final GlobalKey key;
 
   /// Creates a new relative bubble slide instance.
-  const RelativeBubbleSlide({
+  RelativeBubbleSlide({
     Shape shape = const Rectangle(),
     BoxShadow boxShadow = const BoxShadow(
       color: Colors.black54,
@@ -174,8 +174,9 @@ class RelativeBubbleSlide extends BubbleSlide {
     Function(BuildContext, Function) builder,
     Duration duration,
     bool disableOutsideTap,
-    @required this.widgetKey,
-  }) : super(
+    Key key,
+  })  : this.key = key ?? GlobalKey(),
+        super(
           shape: shape,
           boxShadow: boxShadow,
           child: child,
@@ -187,8 +188,7 @@ class RelativeBubbleSlide extends BubbleSlide {
   @override
   Position getHighlightPosition(BuildContext context,
       BubbleShowcase bubbleShowcase, int currentSlideIndex) {
-    RenderBox renderBox =
-        widgetKey.currentContext.findRenderObject() as RenderBox;
+    RenderBox renderBox = key.currentContext.findRenderObject() as RenderBox;
     Offset offset = renderBox.localToGlobal(Offset.zero);
 
     return Position(

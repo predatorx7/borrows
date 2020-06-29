@@ -13,39 +13,22 @@ class _BubbleShowcaseDemoApp extends StatelessWidget {
           appBar: AppBar(
             title: const Text('Bubble Showcase Demo'),
           ),
-          body: _BubbleShowcaseDemoWidget(),
+          body: HomeScreen(),
         ),
       );
 }
 
 /// The main demo widget.
-class _BubbleShowcaseDemoWidget extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   /// The title text global key.
   final GlobalKey _titleKey = GlobalKey();
 
   /// The first button global key.
   final GlobalKey _firstButtonKey = GlobalKey();
 
-  @override
-  Widget build(BuildContext context) {
-    TextStyle textStyle = Theme.of(context).textTheme.body1.copyWith(
-          color: Colors.white,
-        );
-    return BubbleShowcase(
-      // bubbleShowcaseId: 'my_bubble_showcase',
-      // bubbleShowcaseVersion: 1,
-      bubbleSlides: [
-        _firstSlide(textStyle),
-        _secondSlide(textStyle),
-        _thirdSlide(textStyle),
-      ],
-      child: _BubbleShowcaseDemoChild(_titleKey, _firstButtonKey),
-    );
-  }
-
   /// Creates the first slide.
   BubbleSlide _firstSlide(TextStyle textStyle) => RelativeBubbleSlide(
-        widgetKey: _titleKey,
+        key: _titleKey,
         child: RelativeBubbleSlideChild(
           widget: Padding(
             padding: const EdgeInsets.only(top: 8),
@@ -106,7 +89,7 @@ class _BubbleShowcaseDemoWidget extends StatelessWidget {
 
   /// Creates the third slide.
   BubbleSlide _thirdSlide(TextStyle textStyle) => RelativeBubbleSlide(
-        widgetKey: _firstButtonKey,
+        key: _firstButtonKey,
         shape: const Oval(
           spreadRadius: 15,
         ),
@@ -141,10 +124,26 @@ class _BubbleShowcaseDemoWidget extends StatelessWidget {
           ),
         ),
       );
+
+  @override
+  Widget build(BuildContext context) {
+    TextStyle textStyle = Theme.of(context).textTheme.bodyText2.copyWith(
+          color: Colors.white,
+        );
+    return BubbleShowcase(
+      showBubble: ShowBubble.everyTime,
+      bubbleSlides: [
+        _firstSlide(textStyle),
+        _secondSlide(textStyle),
+        _thirdSlide(textStyle),
+      ],
+      child: HomeScreenBody(_titleKey, _firstButtonKey),
+    );
+  }
 }
 
 /// The main demo widget child.
-class _BubbleShowcaseDemoChild extends StatelessWidget {
+class HomeScreenBody extends StatelessWidget {
   /// The title text global key.
   final GlobalKey _titleKey;
 
@@ -152,7 +151,7 @@ class _BubbleShowcaseDemoChild extends StatelessWidget {
   final GlobalKey _firstButtonKey;
 
   /// Creates a new bubble showcase demo child instance.
-  _BubbleShowcaseDemoChild(this._titleKey, this._firstButtonKey);
+  HomeScreenBody(this._titleKey, this._firstButtonKey);
 
   @override
   Widget build(BuildContext context) => Padding(
@@ -177,7 +176,12 @@ class _BubbleShowcaseDemoChild extends StatelessWidget {
               child: RaisedButton(
                 child: const Text('This button is NEW !'),
                 key: _firstButtonKey,
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return HomeScreen();
+                  }));
+                },
               ),
             ),
             RaisedButton(

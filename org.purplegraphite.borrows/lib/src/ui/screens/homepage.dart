@@ -1,11 +1,11 @@
 import 'package:borrows/src/commons/string_const.dart';
 import 'package:borrows/src/ui/components/drawer.dart';
-import 'package:borrows/src/ui/components/text/icon.dart';
-import 'package:borrows/src/ui/components/text/text.dart';
+import 'package:borrows/src/ui/components/popupMenuTIle.dart';
+import 'package:borrows/src/ui/components/title.dart';
+import 'package:borrows/src/ui/screens/about/about.dart';
 import 'package:borrows/src/utils/string_util.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:icofont_flutter/icofont_flutter.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -21,18 +21,38 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
-    final String title =
-        StringUtils.toFirstLetterUppercase(Strings.applicationTitle);
     final Brightness brightness = Theme.of(context).brightness;
     final bool isDark = brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
         leading: DrawerButton(),
-        title: Text(
-          title,
-          style: GoogleFonts.bitter(fontSize: 20),
-        ),
+        title: ApplicationTitle(),
+        actions: <Widget>[
+          PopupMenuButton(
+              color: isDark ? Colors.grey.shade800 : Colors.white,
+              itemBuilder: (context) {
+                return <PopupMenuEntry>[
+                  PopupMenuTile(
+                    onTap: () {},
+                    icon: Icon(EvaIcons.options2),
+                    label: StringUtils.toFirstLetterUppercase(Strings.settings),
+                  ),
+                  PopupMenuTile(
+                    onTap: () {
+                      showMyAboutDialog(
+                        context: context,
+                        applicationIcon: ApplicationTitle(),
+                        applicationLegalese: Strings.applicationLegalese,
+                        applicationVersion: Strings.applicationVersion,
+                      );
+                    },
+                    icon: Icon(EvaIcons.questionMark),
+                    label: StringUtils.toFirstLetterUppercase(Strings.aboutUs),
+                  ),
+                ];
+              }),
+        ],
       ),
       body: Center(
         child: Column(
@@ -52,18 +72,6 @@ class _HomePageState extends State<HomePage> {
         child: ListView(
           children: <Widget>[
             // Head
-            ListTile(
-              leading: IconBuilder(
-                context,
-                IcoFontIcons.settings,
-                IconType.drawerIcon,
-              ),
-              title: TextBuilder(
-                context,
-                StringUtils.toFirstLetterUppercase(Strings.settings),
-                TextType.drawerText,
-              ),
-            ),
           ],
         ),
       ),

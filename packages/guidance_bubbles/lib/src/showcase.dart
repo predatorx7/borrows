@@ -5,10 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:guidance_bubbles/src/_internal.dart';
 import 'slide.dart';
 
-enum ShowBubble {
-  onlyForFirstLaunch,
-  everyTime,
-}
+enum ShowBubble { onlyForFirstLaunch, everyTime, everyLaunch }
 
 class CounterText {
   int _currentSlide;
@@ -49,9 +46,6 @@ class BubbleShowcase extends StatefulWidget {
   /// When should this bubble display
   final ShowBubble showBubble;
 
-  /// Whether this showcase should reopen once closed.
-  final bool doNotReopenOnClose;
-
   /// All slides.
   final List<BubbleSlide> bubbleSlides;
 
@@ -74,7 +68,6 @@ class BubbleShowcase extends StatefulWidget {
 
   /// Creates a new bubble showcase instance.
   BubbleShowcase({
-    this.doNotReopenOnClose = false,
     @required this.bubbleSlides,
     this.showBubble = ShowBubble.onlyForFirstLaunch,
     this.child,
@@ -89,20 +82,17 @@ class BubbleShowcase extends StatefulWidget {
 
   /// Whether this showcase should be opened.
   Future<bool> get shouldOpenShowcase async {
-    if (_used.used && doNotReopenOnClose) {
-      // has been shown
-      return false;
-    }
-
     InternalPreferences internal = await InternalPreferences.getInstance();
-    if (showBubble == ShowBubble.onlyForFirstLaunch) {
-      // Show bubble only first time
-      return internal.isFirstTime;
+    switch (showBubble) {
+      case ShowBubble.onlyForFirstLaunch:
+        // is first launch and rendered first time
+        return internal.isFirstTime && !_used.used;
+      case ShowBubble.everyLaunch:
+        return _used.used;
+      case ShowBubble.everyTime:
+      default:
+        return true;
     }
-    print(
-        'Launch count: ${internal.launchCount} First time: ${internal.isFirstTime}');
-    // show everytime
-    return true;
   }
 }
 
@@ -164,9 +154,8 @@ class _BubbleShowcaseState extends State<BubbleShowcase>
 
     if (_isFinished) {
       _currentSlideEntry = null;
-      if (widget.doNotReopenOnClose) {
-        widget._used.used = true;
-      }
+      // has been used
+      widget._used.used = true;
     } else {
       _currentSlideEntry = _createCurrentSlideEntry();
       Overlay.of(context).insert(_currentSlideEntry);
